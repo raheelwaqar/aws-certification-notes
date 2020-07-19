@@ -2754,6 +2754,14 @@ launch type.
   * Static host port mapping: Only one task per container instance allowed, e.g. mapping host port 80 to container port
   * Dynamic host port mapping: Uses randomized host ports, can work together with ALB to run multiple task instances per container instance
   * Tasks can have individual IAM roles
+* **ECS Service with Load Balancer**
+  * We can deploy httpd multiple container on same EC2 instances. For this we will change out task defination by creating new revision.
+  * This time we will not include any *HOST port* in task defination, we will just specify *Container port* e.g 80 and Host port will become random.
+  * We will use ALB(Application Load Balancer) with *dynamic port forwarding*. Which will pick the traffic and spread it automaticaly to different containers.
+  * Above is the solution of the usecase to run multiple same task on a same EC2 instance.
+  * ALB security group must be added into EC2 security group inbound rules that will allow all trafic with port range 0-65535 from ALB security group.
+  * Note: You cannot add and ELB after creating the service. ELB should be added at the time of creation of the Service.*
+  
 
 <a name="4_17_3"></a>
 ### [↖](#4_17)[↑](#4_17_2)[↓](#4_17_4) Auto Scaling
