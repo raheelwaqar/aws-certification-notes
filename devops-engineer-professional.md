@@ -2734,6 +2734,7 @@ launch type.
       * Controlled by CodeDeploy
       * Allows to verify a new deployment of a service before sending production traffic to it
 * **Task Definition**
+  * Tasks defination are metadata in JSON format to tell ECS how to run a Docker container so it won't run it but tell how to run it.
   * ECS allows to run and maintain a specified number containers in a task definition
     * Group by responsility, e.g. separate task definitions for frontend and backend
   * The task definition is a text file, in JSON format, that describes one or more *containers*, up to a maximum of ten, that form your application
@@ -2741,6 +2742,8 @@ launch type.
     * Container image to use
     * Port to be opened & networking
     * Data volumes
+    * Memory and CPU required
+  * Task roles (If task cannot pull image from ECR or it cannot talk to S3 then because it's missing task role)
   * Either for ECS or Fargate
 * **Container Definitions**
   * Can mark container as *essential* - if that container fails or stops for any reason, all other containers that are part of the task are stopped
