@@ -2761,14 +2761,20 @@ launch type.
   * Above is the solution of the usecase to run multiple same task on a same EC2 instance.
   * ALB security group must be added into EC2 security group inbound rules that will allow all trafic with port range 0-65535 from ALB security group.
   * Note: You cannot add and ELB after creating the service. ELB should be added at the time of creation of the Service.*
+* **ECS IAM Roles**
+  * There are 2 types of roles in ECS.
+    * One is for EC2 instances that are running in ECS clusters that can perform the actions like register/deregister Container instances
+      , get images from ECR etc.
+    * Second is into *Task Defination* which is a task role. This will provide the ability to docker container to perform things on AWS. For example ReadOnlyAccessToS3.
+    *Note: In the Fargate type there is only Task defination role because it's Serverless and don't have EC2 instances*
   
 
 <a name="4_17_3"></a>
 ### [↖](#4_17)[↑](#4_17_2)[↓](#4_17_4) Auto Scaling
 * Use *Service Auto Scaling* for
-  * Target Tracking Scaling Poilicy
-  * Step Scaling Policy
-  * Sdcheduled Scaling
+  * Target Tracking Scaling Poilicy (It is based on ECS metrics)
+  * Step Scaling Policy (It requires Alarm to increase / decrease tasks)
+  * *Note: It will add tasks to EC2 instances but will not Auto Scale Ec2 instances itself. In this case Launch Type Fargate is useful because in this case we don't manage EC2 instances.*
 
 * For ECS, we also need to scale the cluster
   * This is really tricky, but in essence there's an ASG around the EC2 instances that form the cluster
@@ -2778,11 +2784,12 @@ launch type.
 <a name="4_17_4"></a>
 ### [↖](#4_17)[↑](#4_17_3)[↓](#4_17_5) Logging
 * For tasks, configure logging agent with task definition
-  * Typically CloudWatch, also supports Splunk
+  * Typically CloudWatch Log driver in task definations, also supports Splunk Log driver.
+  * Docker container itself knows, how to send logs to CloudWatch. It will just use IAM permission that is assigned to task defination. 
 * For cluster instances, install CloudWatch Agent
-* Various ECS-specific CloudWatch metrics available
+* Various ECS-specific CloudWatch metrics available.
 * Various ECS-specific CloudWatch Events available
-* Can enable CloudWatch Container Insights
+* Can enable CloudWatch Container Insights. But for this servcie we will have to pay extra.
   * Sends per-container metrics into CloudWatch metrics
 
 <a name="4_17_5"></a>
